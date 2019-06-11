@@ -5857,6 +5857,7 @@ abstract class Draw extends BaseDraw
         $BreakB = isset($Format["BreakB"]) ? $Format["BreakB"] : null;
         $DisplayValues = isset($Format["DisplayValues"]) ? $Format["DisplayValues"] : false;
         $DisplayOffset = isset($Format["DisplayOffset"]) ? $Format["DisplayOffset"] : 2;
+        $XDisplayOffset = isset($Format["XDisplayOffset"]) ? $Format["XDisplayOffset"] : 0;
         $DisplayColor = isset($Format["DisplayColor"]) ? $Format["DisplayColor"] : DISPLAY_MANUAL;
         $DisplayR = isset($Format["DisplayR"]) ? $Format["DisplayR"] : 0;
         $DisplayG = isset($Format["DisplayG"]) ? $Format["DisplayG"] : 0;
@@ -5959,7 +5960,7 @@ abstract class Draw extends BaseDraw
                                 $Offset = -$DisplayOffset;
                             }
                             $this->drawText(
-                                $X,
+                                $X + $XDisplayOffset,
                                 $Y - $Offset - $Weight,
                                 $this->scaleFormat(
                                     $Serie["Data"][$Key],
