@@ -5960,7 +5960,7 @@ abstract class Draw extends BaseDraw
                                 $Offset = -$DisplayOffset;
                             }
                             $this->drawText(
-                                $X + $XDisplayOffset,
+                                $X + ($Key == 0 ? $XDisplayOffset : 0),
                                 $Y - $Offset - $Weight,
                                 $this->scaleFormat(
                                     $Serie["Data"][$Key],
