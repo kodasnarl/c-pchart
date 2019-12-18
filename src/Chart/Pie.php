@@ -80,6 +80,7 @@ class Pie
         $ValueB = isset($Format["ValueB"]) ? $Format["ValueB"] : 255;
         $ValueAlpha = isset($Format["ValueAlpha"]) ? $Format["ValueAlpha"] : 100;
         $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : false;
+        $ValueColors = isset($Format["ValueColors"]) ? $Format["ValueColors"] : null;
 
         $Data = $this->pDataObject->getData();
         $Palette = $this->pDataObject->getPalette();
@@ -385,6 +386,12 @@ class Pie
                     $Display = round((100 / $SerieSum) * $Value, $Precision) . "%";
                 } elseif ($WriteValues == PIE_VALUE_NATURAL) {
                     $Display = $Value . $ValueSuffix;
+                }
+                if(!empty($ValueColors[$Key])) {
+                  $Settings['R'] = !empty($ValueColors[$Key]['R']) ? $ValueColors[$Key]['R'] : $ValueR;
+                  $Settings['G'] = !empty($ValueColors[$Key]['G']) ? $ValueColors[$Key]['G'] : $ValueG;
+                  $Settings['B'] = !empty($ValueColors[$Key]['B']) ? $ValueColors[$Key]['B'] : $ValueB;
+                  $Settings['Alpha'] = !empty($ValueColors[$Key]['Alpha']) ? $ValueColors[$Key]['Alpha'] : $ValueAlpha;
                 }
                 $this->pChartObject->drawText($Xc, $Yc, $Display, $Settings);
 
