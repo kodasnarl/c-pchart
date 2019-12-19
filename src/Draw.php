@@ -5858,6 +5858,7 @@ abstract class Draw extends BaseDraw
         $DisplayValues = isset($Format["DisplayValues"]) ? $Format["DisplayValues"] : false;
         $DisplayOffset = isset($Format["DisplayOffset"]) ? $Format["DisplayOffset"] : 2;
         $XDisplayOffset = isset($Format["XDisplayOffset"]) ? $Format["XDisplayOffset"] : 0;
+        $FixedDisplayOffset = isset($Format["FixedDisplayOffset"]) ? $Format["FixedDisplayOffset"] : false;
         $DisplayColor = isset($Format["DisplayColor"]) ? $Format["DisplayColor"] : DISPLAY_MANUAL;
         $DisplayR = isset($Format["DisplayR"]) ? $Format["DisplayR"] : 0;
         $DisplayG = isset($Format["DisplayG"]) ? $Format["DisplayG"] : 0;
@@ -5869,7 +5870,7 @@ abstract class Draw extends BaseDraw
         $ForceG = isset($Format["ForceG"]) ? $Format["ForceG"] : 0;
         $ForceB = isset($Format["ForceB"]) ? $Format["ForceB"] : 0;
         $ForceAlpha = isset($Format["ForceAlpha"]) ? $Format["ForceAlpha"] : 100;
-
+        
         $this->LastChartLayout = CHART_LAST_LAYOUT_REGULAR;
 
         $Data = $this->DataSet->getData();
@@ -5950,17 +5951,29 @@ abstract class Draw extends BaseDraw
                     }
                     $LastGoodY = null;
                     $LastGoodX = null;
+                    
                     foreach ($PosArray as $Key => $Y) {
                         if ($DisplayValues && $Serie["Data"][$Key] != VOID) {
+                            $tmpDisplayOffset = $DisplayOffset;
+                            if(!$FixedDisplayOffset && $Key > 0 && $Key < count($Serie["Data"]) - 1) {
+                                if($Serie["Data"][$Key] > 99 || ($Serie["Data"][$Key-1] < $Serie["Data"][$Key] && $Serie["Data"][$Key] > $Serie["Data"][$Key + 1]) || ($Serie["Data"][$Key-1] < $Serie["Data"][$Key] && 100 * (abs($Serie["Data"][$Key] - $Serie["Data"][$Key + 1]) / $Serie["Data"][$Key]) < 10)) {
+                                    $tmpDisplayOffset = -$DisplayOffset - 30; 
+                                }
+                            }
+                            if($FixedDisplayOffset && $Serie["Data"][$Key] >= 99.5 ) {
+                                $tmpDisplayOffset = -$DisplayOffset - 25; 
+                            }
+
                             if ($Serie["Data"][$Key] > 0) {
                                 $Align = TEXT_ALIGN_BOTTOMMIDDLE;
-                                $Offset = $DisplayOffset;
+                                $Offset = $tmpDisplayOffset;
                             } else {
                                 $Align = TEXT_ALIGN_TOPMIDDLE;
-                                $Offset = -$DisplayOffset;
+                                $Offset = -$tmpDisplayOffset;
                             }
+
                             $this->drawText(
-                                $X + ($Key == 0 ? $XDisplayOffset : 0),
+                                $X + ($Key == 0 ? $XDisplayOffset : 15),
                                 $Y - $Offset - $Weight,
                                 $this->scaleFormat(
                                     $Serie["Data"][$Key],
