@@ -5956,7 +5956,7 @@ abstract class Draw extends BaseDraw
                         if ($DisplayValues && $Serie["Data"][$Key] != VOID) {
                             $tmpDisplayOffset = $DisplayOffset;
                             if(!$FixedDisplayOffset && $Key > 0 && $Key < count($Serie["Data"]) - 1) {
-                                if($Serie["Data"][$Key] > 99 || ($Serie["Data"][$Key-1] < $Serie["Data"][$Key] && $Serie["Data"][$Key] > $Serie["Data"][$Key + 1]) || ($Serie["Data"][$Key-1] < $Serie["Data"][$Key] && 100 * (abs($Serie["Data"][$Key] - $Serie["Data"][$Key + 1]) / $Serie["Data"][$Key]) < 10)) {
+                                if($Serie["Data"][$Key] >= 99.5 || ($Serie["Data"][$Key-1] < $Serie["Data"][$Key] && $Serie["Data"][$Key] > $Serie["Data"][$Key + 1]) || ($Serie["Data"][$Key-1] < $Serie["Data"][$Key] && 100 * (abs($Serie["Data"][$Key] - $Serie["Data"][$Key + 1]) / $Serie["Data"][$Key]) < 10)) {
                                     $tmpDisplayOffset = -$DisplayOffset - 30; 
                                 }
                             }
