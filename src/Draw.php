@@ -5843,7 +5843,13 @@ abstract class Draw extends BaseDraw
             }
         }
     }
-
+    private function _angle($cx, $cy, $ex, $ey) {
+        $dy = $ey - $cy;
+        $dx = $ex - $cx;
+        $theta = atan2($dy, $dx);
+        $theta *= 180 / pi();
+        return $theta;
+    }
     /**
      * Draw a line chart
      * @param array $Format
@@ -5870,6 +5876,7 @@ abstract class Draw extends BaseDraw
         $ForceG = isset($Format["ForceG"]) ? $Format["ForceG"] : 0;
         $ForceB = isset($Format["ForceB"]) ? $Format["ForceB"] : 0;
         $ForceAlpha = isset($Format["ForceAlpha"]) ? $Format["ForceAlpha"] : 100;
+        $OptimizeTextAngle = isset($Format["OptimizeTextAngle"]) ? $Format["OptimizeTextAngle"] : false;
         
         $this->LastChartLayout = CHART_LAST_LAYOUT_REGULAR;
 
@@ -5972,9 +5979,48 @@ abstract class Draw extends BaseDraw
                                 $Offset = -$tmpDisplayOffset;
                             }
 
+                            $DrawXPos = $X + ($Key == 0 ? $XDisplayOffset : 15);
+                            $DrawYPos = $Y - $Offset - $Weight;
+
+                            $textAngle = 0;
+                            $checkAngle = 0;
+
+                            if($FixedDisplayOffset && $OptimizeTextAngle) {
+                                if($Key > 0 && $Key < count($PosArray) - 1) {
+                                    $textAngle = 0 - $this->_angle($X, $Y, $X+$XStep, $PosArray[$Key+1]);
+                                    $textAngleLeft = $this->_angle($X-$XStep, $PosArray[$Key-1],$X, $Y);
+                                    $checkAngle = 180 - $textAngleLeft - $textAngle;
+
+                                } else {
+                                    if($Key == 0) {
+                                        $textAngle = 0 - $this->_angle($X, $Y, $X+$XStep, $PosArray[$Key+1]);
+                                    } else {
+                                        $textAngle = 0;
+                                    }
+                                    $checkAngle = 0;
+                                }
+
+                                if($checkAngle > 160) {
+                                    $textAngle = 0;
+                                }
+
+                                if($Key == 0 && $textAngle > 10) {
+                                    $DrawYPos -= 5;
+                                }
+                                if($Key > 0 && $textAngle > 10 && $textAngleLeft < 10) {
+                                    $DrawXPos -= 5;
+                                    $DrawYPos -= 5;
+                                    $textAngle = 0;
+                                } else if($Key > 0 && $textAngle < 10 && $textAngleLeft > 10) {
+                                    $DrawXPos += 5;
+                                    $DrawYPos -= 5;
+                                    $textAngle = 0;
+                                }
+                            }
+                            
                             $this->drawText(
-                                $X + ($Key == 0 ? $XDisplayOffset : 15),
-                                $Y - $Offset - $Weight,
+                                $DrawXPos,
+                                $DrawYPos,
                                 $this->scaleFormat(
                                     $Serie["Data"][$Key],
                                     $Mode,
@@ -5982,6 +6028,7 @@ abstract class Draw extends BaseDraw
                                     $Unit
                                 ),
                                 [
+                                    "Angle" => $textAngle,
                                     "R" => $DisplayR,
                                     "G" => $DisplayG,
                                     "B" => $DisplayB,
