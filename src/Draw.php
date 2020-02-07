@@ -6000,16 +6000,34 @@ abstract class Draw extends BaseDraw
                                     $checkAngle = 0;
                                 }
 
-                                if($checkAngle > 160) {
+                                if($checkAngle > 160 && $textAngle < 20) {
                                     $textAngle = 0;
                                 }
-
-                                if($Key == 0 && $textAngle > 10) {
+                                if($Key == 0 && $textAngle > 15) {
+                                    $DrawYPos -= 7;
+                                }else if($Key == 0 && $textAngle > 10) {
                                     $DrawYPos -= 5;
                                 }
-                                if($Key > 0 && $textAngle > 10 && $textAngleLeft < 10) {
+                                if($Key > 0 && $textAngle > 20 && $textAngleLeft < 10) {
+                                    $DrawXPos -= 10;
+                                    $DrawYPos -= 7;
+                                    $textAngle = 0;
+                                } else if($Key > 0 && $textAngle > 15 && $textAngleLeft < 10) {
+                                    $DrawXPos -= 7;
+                                    $DrawYPos -= 7;
+                                    $textAngle = 0;
+                                } else if($Key > 0 && $textAngle > 10 && $textAngleLeft < 10) {
                                     $DrawXPos -= 5;
                                     $DrawYPos -= 5;
+                                    $textAngle = 0;
+                                } else if($Key > 0 && $textAngle < 10 && $textAngleLeft > 20) {
+                                    $DrawXPos += 10;
+                                    $DrawYPos -= 7;
+                                    $textAngle = 0;
+                                }
+                                else if($Key > 0 && $textAngle < 10 && $textAngleLeft > 15) {
+                                    $DrawXPos += 7;
+                                    $DrawYPos -= 7;
                                     $textAngle = 0;
                                 } else if($Key > 0 && $textAngle < 10 && $textAngleLeft > 10) {
                                     $DrawXPos += 5;
