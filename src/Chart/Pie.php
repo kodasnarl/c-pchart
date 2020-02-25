@@ -359,7 +359,7 @@ class Pie
         if ($WriteValues != null && !$Shadow) {
             $Step = 360 / (2 * PI * $Radius);
             $Offset = 0;
-            $ID = count($Values) - 1;
+            $ID = 0;
             $Settings = [
                 "Align" => TEXT_ALIGN_MIDDLEMIDDLE,
                 "R" => $ValueR,
@@ -384,6 +384,8 @@ class Pie
 
                 if ($WriteValues == PIE_VALUE_PERCENTAGE) {
                     $Display = round((100 / $SerieSum) * $Value, $Precision) . "%";
+                } elseif ($WriteValues == PIE_VALUE_NATURAL && !empty($Precision)) {
+                    $Display = round($Value, $Precision) . $ValueSuffix;
                 } elseif ($WriteValues == PIE_VALUE_NATURAL) {
                     $Display = $Value . $ValueSuffix;
                 }
@@ -393,10 +395,20 @@ class Pie
                   $Settings['B'] = !empty($ValueColors[$Key]['B']) ? $ValueColors[$Key]['B'] : $ValueB;
                   $Settings['Alpha'] = !empty($ValueColors[$Key]['Alpha']) ? $ValueColors[$Key]['Alpha'] : $ValueAlpha;
                 }
-                $this->pChartObject->drawText($Xc, $Yc, $Display, $Settings);
 
+                if(round($Value, $Precision) == 0) {
+                    $Settings['BoxR'] = $Palette[$ID]["R"];
+                    $Settings['BoxG'] = $Palette[$ID]["G"];
+                    $Settings['BoxB'] = $Palette[$ID]["B"];
+                    $Settings['BoxAlpha'] = $Palette[$ID]["Alpha"];
+                    $Settings['DrawBox'] = true;
+
+                    $this->pChartObject->drawText($Xc, $Yc, $Display, $Settings);
+                }
+                else
+                    $this->pChartObject->drawText($Xc, $Yc, $Display, $Settings);
                 $Offset = $EndAngle + $DataGapAngle;
-                $ID--;
+                $ID++;
             }
         }
 
