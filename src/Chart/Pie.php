@@ -81,6 +81,7 @@ class Pie
         $ValueAlpha = isset($Format["ValueAlpha"]) ? $Format["ValueAlpha"] : 100;
         $RecordImageMap = isset($Format["RecordImageMap"]) ? $Format["RecordImageMap"] : false;
         $ValueColors = isset($Format["ValueColors"]) ? $Format["ValueColors"] : null;
+        $ValuePaddings = isset($Format["ValuePaddings"]) ? $Format["ValuePaddings"] : null;
 
         $Data = $this->pDataObject->getData();
         $Palette = $this->pDataObject->getPalette();
@@ -375,6 +376,9 @@ class Pie
                 $Angle = ($EndAngle - $Offset) / 2 + $Offset;
 
                 if ($ValuePosition == PIE_VALUE_OUTSIDE) {
+                    if(!empty($ValuePaddings[$Key])) {
+                        $ValuePadding += $ValuePaddings[$Key];
+                    }
                     $Xc = cos(($Angle - 90) * PI / 180) * ($Radius + $ValuePadding) + $X;
                     $Yc = sin(($Angle - 90) * PI / 180) * ($Radius + $ValuePadding) + $Y;
                 } else {
