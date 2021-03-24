@@ -5998,6 +5998,7 @@ abstract class Draw extends BaseDraw
                                         $textAngle = 0;
                                     }
                                     $checkAngle = 0;
+                                    $textAngleLeft = null;
                                 }
 
                                 if($checkAngle > 160 && $textAngle < 20) {
