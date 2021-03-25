@@ -376,7 +376,7 @@ class Pie
                 $Angle = ($EndAngle - $Offset) / 2 + $Offset;
 
                 if ($ValuePosition == PIE_VALUE_OUTSIDE) {
-                    if(!empty($ValuePaddings[$Key])) {
+                    if(!empty($ValuePaddings[$Key]) && $Value < 4) {
                         $ValuePadding += $ValuePaddings[$Key];
                     }
                     $Xc = cos(($Angle - 90) * PI / 180) * ($Radius + $ValuePadding) + $X;
@@ -387,9 +387,9 @@ class Pie
                 }
 
                 if ($WriteValues == PIE_VALUE_PERCENTAGE) {
-                    $Display = round((100 / $SerieSum) * $Value, $Precision) . "%";
+                    $Display = number_format(round((100 / $SerieSum) * $Value, $Precision), $Precision) . "%";
                 } elseif ($WriteValues == PIE_VALUE_NATURAL && !empty($Precision)) {
-                    $Display = round($Value, $Precision) . $ValueSuffix;
+                    $Display = number_format(round($Value, $Precision), $Precision) . $ValueSuffix;
                 } elseif ($WriteValues == PIE_VALUE_NATURAL) {
                     $Display = $Value . $ValueSuffix;
                 }
